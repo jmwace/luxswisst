@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞士高端商务用车专家</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a1a1a;
+            --accent-color: #c5a47e;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* 顶部横幅 */
+        .top-banner {
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .top-banner a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background: white;
+            padding: 20px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .book-now {
+            background: var(--accent-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .book-now:hover {
+            background: #b08f68;
+        }
+
+        /* Hero区域 */
+        .hero {
+            height: calc(100vh - 120px);
+            position: relative;
+            overflow: hidden;
+            color: var(--text-light);
+        }
+
+        /* 轮播图样式 */
+        .slideshow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .slideshow-item {
+            opacity: 0;
+            transition: all 1s ease;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .slideshow-item::after {
+            /* 暂时注释掉遮罩层
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            */
+        }
+
+        /*
+        .slideshow-item:nth-child(1) {
+            background-image: url('./img/v-class-1.jpg');
+            animation-delay: 0s;
+        }
+
+        .slideshow-item:nth-child(2) {
+            background-image: url('./img/v-class-2.jpg');
+            animation-delay: 5s;
+        }
+
+        .slideshow-item:nth-child(3) {
+            background-image: url('./img/v-class-3.jpg');
+            animation-delay: 10s;
+        }
+
+        .slideshow-item:nth-child(4) {
+            background-image: url('./img/v-class-4.jpg');
+            animation-delay: 15s;
+        }
+        */
+
+        @keyframes slideshow {
+            0%, 20% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            25%, 95% {
+                opacity: 0;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        /* 修改 hero-content 样式，确保内容在轮播图上层 */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 添加轮播指示器 */
+        .slideshow-indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 3;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .indicator.active {
+            background: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .features {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* 左右切换按钮样式 */
+        .slideshow-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            z-index: 3;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .nav-button {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        /* 修改轮播图样式，移除自动动画 */
+        .slideshow-item {
+            opacity: 0;
+            transition: all 1s ease;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slideshow-item.active {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* 聊天框样式 */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 380px;
+            height: 600px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-container.active {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            background: #f0f0f0;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            background: var(--accent-color);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .send-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: #b08f68;
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                width: calc(100% - 40px);
+                height: calc(100vh - 120px);
+            }
+        }
+
+        /* 在 Hero 区域后面添加社交媒体链接区域 */
+        .social-media {
+            padding: 60px 0;
+            background: #f8f9fa;
+            text-align: center;
+        }
+
+        .social-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .social-media h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            padding: 20px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 120px;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            color: var(--accent-color);
+        }
+
+        .social-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .social-link span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* 添加悬浮效果 */
+        .social-link:hover .social-icon {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .social-links {
+                gap: 20px;
+            }
+
+            .social-link {
+                width: 100px;
+                padding: 15px;
+            }
+
+            .social-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部横幅 -->
+    <div class="top-banner">
+        24小时预约热线: +41 XX XXX XXXX
+        <a href="https://wa.me/41XXXXXXXX">
+            <i class="fab fa-whatsapp"></i> WhatsApp快速联系
+        </a>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">VIP Transfer</div>
+        <div class="nav-links">
+            <a href="#vehicles">车型介绍</a>
+            <a href="#services">包车服务</a>
+            <a href="#airport">接送机</a>
+            <a href="#routes">经典路线</a>
+        </div>
+        <a href="#booking" class="book-now">立即预约</a>
+    </nav>
+
+    <!-- Hero区域 -->
+    <section class="hero">
+        <div class="slideshow">
+            <div class="slideshow-item active" style="background-image: url('img/v-class-1.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-2.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-3.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-4.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-5.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-6.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-7.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-8.jpg')"></div>
+            <div class="slideshow-item" style="background-image: url('img/v-class-9.jpg')"></div>
+        </div>
+
+        <!-- 添加左右切换按钮 -->
+        <div class="slideshow-nav">
+            <button class="nav-button prev">❮</button>
+            <button class="nav-button next">❯</button>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">瑞士高端商务用车专家</h1>
+            <p class="hero-subtitle">100%奔驰V级商务车队，专业中文司机，极致舒适体验</p>
+            <div class="features">
+                <div class="feature-item">
+                    <span class="feature-icon">🚘</span>
+                    <span>全新奔驰V级</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">👨‍✈️</span>
+                    <span>专业中文司机</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌟</span>
+                    <span>五星级服务</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔒</span>
+                    <span>安全保障</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 添加轮播指示器 -->
+        <div class="slideshow-indicators">
+            <div class="indicator active"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+            <div class="indicator"></div>
+        </div>
+    </section>
+
+    <!-- 在 Hero 区域后面添加社交媒体链接区域 -->
+    <section class="social-media">
+        <div class="social-container">
+            <h2>关注我们</h2>
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <i class="social-icon">📱</i>
+                    <span>微信</span>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="social-icon">💬</i>
+                    <span>WhatsApp</span>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="social-icon">📷</i>
+                    <span>Instagram</span>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="social-icon">🌐</i>
+                    <span>微博</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 在 body 标签结束前添加以下脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slideshow-item');
+            const indicators = document.querySelectorAll('.indicator');
+            const prevButton = document.querySelector('.prev');
+            const nextButton = document.querySelector('.next');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // 初始化轮播图
+            function initSlideshow() {
+                // 预加载所有图片并添加详细的错误处理
+                slides.forEach((slide, index) => {
+                    const bgImage = slide.style.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/)[1];
+                    console.log(`尝试加载图片: ${bgImage}`); // 输出尝试加载的图片路径
+                    
+                    const img = new Image();
+                    img.onload = () => {
+                        console.log(`✅ 图片 ${index + 1} 加载成功: ${bgImage}`);
+                    };
+                    img.onerror = (error) => {
+                        console.error(`❌ 图片 ${index + 1} 加载失败: ${bgImage}`);
+                        console.error('错误详情:', error);
+                    };
+                    img.src = bgImage;
+                });
+
+                startSlideshow();
+            }
+
+            // 切换到指定幻灯片
+            function goToSlide(index) {
+                slides[currentSlide].classList.remove('active');
+                indicators[currentSlide].classList.remove('active');
+                
+                currentSlide = (index + slides.length) % slides.length;
+                
+                slides[currentSlide].classList.add('active');
+                indicators[currentSlide].classList.add('active');
+            }
+
+            // 下一张幻灯片
+            function nextSlide() {
+                goToSlide(currentSlide + 1);
+            }
+
+            // 上一张幻灯片
+            function prevSlide() {
+                goToSlide(currentSlide - 1);
+            }
+
+            // 开始自动播放
+            function startSlideshow() {
+                if (slideInterval) {
+                    clearInterval(slideInterval);
+                }
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            // 暂停自动播放
+            function pauseSlideshow() {
+                clearInterval(slideInterval);
+            }
+
+            // 事件监听器
+            prevButton.addEventListener('click', () => {
+                prevSlide();
+                pauseSlideshow();
+                startSlideshow();
+            });
+
+            nextButton.addEventListener('click', () => {
+                nextSlide();
+                pauseSlideshow();
+                startSlideshow();
+            });
+
+            // 指示器点击事件
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    goToSlide(index);
+                    pauseSlideshow();
+                    startSlideshow();
+                });
+            });
+
+            // 鼠标悬停时暂停自动播放
+            document.querySelector('.slideshow').addEventListener('mouseenter', pauseSlideshow);
+            document.querySelector('.slideshow').addEventListener('mouseleave', startSlideshow);
+
+            // 摸事件支持
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            document.querySelector('.slideshow').addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+            });
+
+            document.querySelector('.slideshow').addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].clientX;
+                if (touchStartX - touchEndX > 50) {
+                    nextSlide();
+                } else if (touchEndX - touchStartX > 50) {
+                    prevSlide();
+                }
+            });
+
+            // 初始化轮播图
+            initSlideshow();
+        });
+    </script>
+
+    <!-- 在 </style> 标签前添加新的样式 -->
+    <style>
+        /* 聊天框样式 */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 380px;
+            height: 600px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-container.active {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            background: #f0f0f0;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            background: var(--accent-color);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .send-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: #b08f68;
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                width: calc(100% - 40px);
+                height: calc(100vh - 120px);
+            }
+        }
+    </style>
+
+    <!-- 在 body 标签内，在最后添加聊天组件 -->
+    <div class="chat-widget">
+        <button class="chat-button" id="chatButton">💬</button>
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <span>在线客服</span>
+                <button class="close-chat" id="closeChat">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message assistant">
+                    您好！我是您的专属客服助手，很高兴为您服务。请问有什么可以帮您的吗？
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="请输入您的问题...">
+                <button class="send-button" id="sendMessage">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 在最后的 script 标签前添加聊天功能的脚本 -->
+    <script>
+        // 聊天功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatButton = document.getElementById('chatButton');
+            const chatContainer = document.getElementById('chatContainer');
+            const closeChat = document.getElementById('closeChat');
+            const messageInput = document.getElementById('messageInput');
+            const sendMessage = document.getElementById('sendMessage');
+            const chatMessages = document.getElementById('chatMessages');
+
+            // 预设的回复
+            const responses = {
+                '价格': '我们的价格根据行程距离和时间有所不同，具体请告诉我您的行程需求，我会为您详细报价。',
+                '预订': '预订服务很简单，您可以通过以下方式：\n1. 电话预订\n2. WhatsApp联系\n3. 网站在线预订',
+                '车型': '我们使用全新奔驰V级商务车，配备真皮座椅、独立空调、全景天窗等豪华配置。',
+                '联系': '您可以通过以下方式联系我们：\n电话：+41 XX XXX XXXX\nWhatsApp：+41 XX XXX XXXX',
+                '默认': '感谢您的咨询，请问您需要了解具体哪些服务呢？我们提供接送机、包车游览、商务用车等服务。'
+            };
+
+            // 打开聊天窗口
+            chatButton.addEventListener('click', () => {
+                chatContainer.classList.add('active');
+            });
+
+            // 关闭聊天窗口
+            closeChat.addEventListener('click', () => {
+                chatContainer.classList.remove('active');
+            });
+
+            // 发送消息
+            function sendUserMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    // 添加用户消息
+                    addMessage(message, 'user');
+                    messageInput.value = '';
+
+                    // 模拟回复
+                    setTimeout(() => {
+                        let response = responses.默认;
+                        for (let key in responses) {
+                            if (message.includes(key)) {
+                                response = responses[key];
+                                break;
+                            }
+                        }
+                        addMessage(response, 'assistant');
+                    }, 1000);
+                }
+            }
+
+            // 添加消息到聊天框
+            function addMessage(text, type) {
+                const message = document.createElement('div');
+                message.classList.add('message', type);
+                message.textContent = text;
+                chatMessages.appendChild(message);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // 发送按钮点击事件
+            sendMessage.addEventListener('click', sendUserMessage);
+
+            // 输入框回车事件
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendUserMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
